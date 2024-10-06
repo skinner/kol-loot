@@ -26,12 +26,13 @@ function waitForElem(win: Window, selector: string, timeoutSecs: number = 10,
     });
 }
 
-async function updateLoot(recipient: string) {
+async function updateLoot(recipient: number) {
     console.log(`updating loot at ${(new Date()).toISOString()}`);
 
     try {
         // hacky manual error handling test
         // throw new Error('test');
+    
         const jsonUrls = {
             status: 'api.php?for=loot&what=status',
             inventory: 'api.php?for=loot&what=inventory',
@@ -116,7 +117,7 @@ async function updateLoot(recipient: string) {
             ${lootLinesHtml}
             ${resultHtml}
         `;
-        messageArea.parentElement?.appendChild(addElement);    
+        messageArea.parentElement?.appendChild(addElement);
     } catch (e: any) {
         const mainPane = (window as any).top?.frames['mainpane'] as Window | null;
         if (mainPane == null) {
