@@ -22,9 +22,9 @@ function outfitgroup(inv, it1, it2, it3)
 {
 	var surplus = zapsurplus(inv, it1, it2, it3);
 	var group = "";
-	num1 = undefzero(inv[it1]);
-	num2 = undefzero(inv[it2]);
-	num3 = undefzero(inv[it3]);
+	var num1 = undefzero(inv[it1]);
+	var num2 = undefzero(inv[it2]);
+	var num3 = undefzero(inv[it3]);
 	if( num1 == 0 && surplus > 0 )
 	{
 		num1++;
@@ -234,7 +234,8 @@ function dread(id, name, inv, hasfam, skills)
 	return lootline
 }
 
-function process()
+function process(dataStatus, dataInventory, dataCloset, dataStorage, dchtml,
+	dataFamiliar, charsheethtml, skill1html, skill2html, skill3html)
 {
 	var fullinv = {};
 	var hasSlimeling;
@@ -243,6 +244,8 @@ function process()
 	var slimelevel1;
 	var slimelevel2;
 	var slimelevel3;
+
+	var warnings = [];
 
 	var familiar_equippable = {};
 	// hats
@@ -283,19 +286,6 @@ function process()
 	familiar_equippable["455940650"] = "6455";
 	familiar_equippable["572924821"] = "6465";
 
-	var dataFields = [ "dataStatus", "dataInventory", "dataCloset", "dataStorage", "dataDC", "dataFamiliar", "dataCharsheet", "dataSlimeSkill1", "dataSlimeSkill2", "dataSlimeSkill3" ];
-	for( var i = 0; i < dataFields.length; i++ )
-	{
-		if( document.getElementById( dataFields[ i ] ).value.substring(0, 1) != "ABCDEFGHIJ".substring( i, i + 1 ) )
-		{
-			alert( "Missing or incorrect data in field: " + dataFields[ i ] );
-			document.getElementById( dataFields[ i ] ).focus();
-			document.getElementById( dataFields[ i ] ).select();
-			return;
-		}
-	}
-
-	var dataStatus = JSON.parse(document.getElementById("dataStatus").value.substring(1));
 	fullinv[dataStatus.equipment.hat] = 1;
 	fullinv[dataStatus.equipment.container] = 1;
 	fullinv[dataStatus.equipment.shirt] = 1;
@@ -306,25 +296,21 @@ function process()
 	fullinv[dataStatus.equipment.acc2] = 1;
 	fullinv[dataStatus.equipment.acc3] = 1;
 
-	var dataInventory = JSON.parse(document.getElementById("dataInventory").value.substring(1));
 	for( var key in dataInventory )
 	{
 		fullinv[key] = undefzero(fullinv[key]) + parseInt(dataInventory[key]);
 	}
 
-	var dataCloset = JSON.parse(document.getElementById("dataCloset").value.substring(1));
 	for( var key in dataCloset )
 	{
 		fullinv[key] = undefzero(fullinv[key]) + parseInt(dataCloset[key]);
 	}
 
-	var dataStorage = JSON.parse(document.getElementById("dataStorage").value.substring(1));
 	for( var key in dataStorage )
 	{
 		fullinv[key] = undefzero(fullinv[key]) + parseInt(dataStorage[key]);
 	}
 
-	var dchtml = document.getElementById("dataDC").value.substring(1);
 	if( dchtml.indexOf( "Take stuff out of the case" ) != -1 && dchtml.indexOf( "Your case contains no items" ) == -1 )
 	{
 		dchtml = dchtml.replace(/.*Take stuff out of the case:(.*?)\|\/select\|.*/, '$1');
@@ -337,7 +323,6 @@ function process()
 		}
 	}
 
-	var dataFamiliar = document.getElementById("dataFamiliar").value.substring(1);
 	hasSlimeling = dataFamiliar.indexOf("|option value=112|") !== -1;
 	hasNose = dataFamiliar.indexOf("|option value=173|") !== -1;
 	dataFamiliar = dataFamiliar.match(/descitem\(\d*\)/g);
@@ -354,45 +339,43 @@ function process()
 		}
 	}
 
-	var charsheethtml = document.getElementById("dataCharsheet").value.substring(1);
 	charsheethtml = charsheethtml.match(/desc_skill.php.whichskill=\d*/g);
 	for( var i = 0; i < charsheethtml.length; i++ )
 	{	
 		allskills.push(parseInt(charsheethtml[i].replace(/desc_skill.php.whichskill=(\d*)/, '$1')));
 	}
 
-	var skillhtml = document.getElementById("dataSlimeSkill1").value.substring(1);
-	if( skillhtml.indexOf("|b|Maximum HP") == -1 )
+	if( skill1html.indexOf("|b|Maximum HP") == -1 )
 		slimelevel1 = 0;
 	else
-		slimelevel1 =	parseInt(skillhtml.replace(/.*\|b\|Maximum HP \+(\d*)\|\/b\|.*/, '$1')) / 2;
+		slimelevel1 =	parseInt(skill1html.replace(/.*\|b\|Maximum HP \+(\d*)\|\/b\|.*/, '$1')) / 2;
 
-	var skillhtml = document.getElementById("dataSlimeSkill2").value.substring(1);
-	if( skillhtml.indexOf("|b|Maximum MP") == -1 )
+	if( skill2html.indexOf("|b|Maximum MP") == -1 )
 		slimelevel2 = 0;
 	else
-		slimelevel2 =	parseInt(skillhtml.replace(/.*\|b\|Maximum MP \+(\d*)\|\/b\|.*/, '$1'));
+		slimelevel2 =	parseInt(skill2html.replace(/.*\|b\|Maximum MP \+(\d*)\|\/b\|.*/, '$1'));
 
-	var skillhtml = document.getElementById("dataSlimeSkill3").value.substring(1);
-	if( skillhtml.indexOf("Combat Initiative|/b|") == -1 )
+	if( skill3html.indexOf("Combat Initiative|/b|") == -1 )
 		slimelevel3 = 0;
 	else
-		slimelevel3 =	parseInt(skillhtml.replace(/.*\|b\|\+(\d*)% Combat Initiative\|\/b\|.*/, '$1')) / 2;
+		slimelevel3 =	parseInt(skill3html.replace(/.*\|b\|\+(\d*)% Combat Initiative\|\/b\|.*/, '$1')) / 2;
 
 	if( dataStatus.hardcore == "1" || parseInt( dataStatus.roninleft ) > 0 || parseInt( dataStatus.path ) > 0 )
 	{
-		alert( "Warning: This may not give the correct results in ronin/HC and while on a special path" );
+		warnings.push( "Warning: This may not give the correct results in ronin/HC and while on a special path" );
 	}
 	if( undefzero(fullinv["3430"]) > 0 || undefzero(fullinv["4115"]) > 0 || undefzero(fullinv["6581"]) > 0 )
 	{
-		alert( "You have unopened dungeon distribution packages, will not continue" );
+		throw new Error( "You have unopened dungeon distribution packages, will not continue" );
 	}
-	else
-	{
-		prompt("Copy this and paste it into a kmail to the dungeon administrator",
+
+	return {
+		warnings,
+		lootLines:
 			hobopolis(dataStatus.playerid, dataStatus.name, fullinv) + "/// " +
 			slimetube(dataStatus.playerid, dataStatus.name, fullinv, hasSlimeling, slimelevel2, slimelevel1, slimelevel3) + "/// " +
 			dread(dataStatus.playerid, dataStatus.name, fullinv, hasNose, allskills)
-			);
-	}
+	};
 }
+
+export { process };
