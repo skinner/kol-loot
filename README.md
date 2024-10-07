@@ -1,11 +1,22 @@
-## To run, enter into chat:
+# To run:
 todo: deploy
+## enter into chat:
 Change 3728214 to the clan loot admin's ID in kol
     /goto '?'':(async function(){ const mod = await import(`http://arctur.us/kol/kol-loot.js?t=${Date.now()}`); mod.updateLoot(3728214); })();z='
+## click on "Send Message."
 
 ## To develop:
-### Install Yarn
-https://yarnpkg.com/getting-started/install
+### Have node installed
+for example [using nvm, by following the install instructions here](https://github.com/nvm-sh/nvm), then
+    $ nvm install 22
+
+### Have yarn installed
+For example:
+    $ corepack enable
+    $ corepack prepare yarn@stable --activate
+
+### Install dependencies
+    $ yarn
 
 ### Run dev server
     $ yarn run dev

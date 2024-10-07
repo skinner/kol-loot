@@ -31,8 +31,9 @@ async function updateLoot(recipient: number) {
 
     try {
         // hacky manual error handling test
-        // throw new Error('test');
+        // throw new Error('test error');
     
+        // load JSON from the API
         const jsonUrls = {
             status: 'api.php?for=loot&what=status',
             inventory: 'api.php?for=loot&what=inventory',
@@ -49,6 +50,7 @@ async function updateLoot(recipient: number) {
             jsonResults[key] = await response.json();
         }
     
+        // load HTML for non-API sources
         const htmlUrls = {
             collection: 'managecollection.php',
             familiar: 'familiar.php',
@@ -67,7 +69,8 @@ async function updateLoot(recipient: number) {
             const rawHtml = await response.text();
             htmlResults[key] = rawHtml.replace(/[\x3C\x3E]/g, '|');
         }
-    
+
+        // process loaded data
         const result = process(
             jsonResults['status'], jsonResults['inventory'],
             jsonResults['closet'], jsonResults['storage'],
@@ -75,7 +78,8 @@ async function updateLoot(recipient: number) {
             htmlResults['charsheet'], htmlResults['skill1'],
             htmlResults['skill2'], htmlResults['skill3']
         );
-    
+
+        // generate output
         const warnHtml = result.warnings.map(
             w => `<h3 style="background-color: #eec">${w}</h3>`
         ).join('\n');
@@ -91,11 +95,8 @@ async function updateLoot(recipient: number) {
             `
         ).join('\n');
     
-        const lootLinesHtml = `
-        <h3>loot line</h3>
-        <div style="background-color: #ddd;">${result.lootLines}</div><br>
-        `
-    
+        // prepare message for sending and display intermediate results
+        // in case they're useful for debugging
         const mainPane = (window as any).top?.frames['mainpane'] as Window | null;
         if (mainPane == null) {
             throw new Error('no main pane');
@@ -114,7 +115,6 @@ async function updateLoot(recipient: number) {
         const addElement = mainPane.document.createElement("div");
         addElement.innerHTML = `
             ${warnHtml}
-            ${lootLinesHtml}
             ${resultHtml}
         `;
         messageArea.parentElement?.appendChild(addElement);
@@ -129,6 +129,9 @@ async function updateLoot(recipient: number) {
                     background-color: white;
                     font-family: arial;
                     text-color: black;
+                }
+                h3 {
+                    padding: 1ex;
                 }
             </style>
         `;

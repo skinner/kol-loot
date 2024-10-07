@@ -9,6 +9,11 @@ export default defineConfig({
             name: 'kol-loot',
             // the proper extensions will be added
             fileName: 'kol-loot',
-        }
+        },
+        minify: false,
+        terserOptions: {
+          compress: false,
+          mangle: false,
+        },
     }
 });
