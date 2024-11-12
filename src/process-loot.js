@@ -1,3 +1,6 @@
+// taken from PeKaJe's loot checker:
+// http://pekaje.mooo.com/share/lootchecker/lootchecker_v6.html
+
 function undefzero(val)
 {
 	if( typeof val == "undefined" )
