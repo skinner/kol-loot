@@ -1,5 +1,8 @@
-// taken from PeKaJe's loot checker:
-// http://pekaje.mooo.com/share/lootchecker/lootchecker_v6.html
+/**
+ * taken from PeKaJe's loot checker:
+ * http://pekaje.mooo.com/share/lootchecker/lootchecker_v6.html
+ * @preserve
+ */
 
 function undefzero(val)
 {

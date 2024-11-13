@@ -104,7 +104,7 @@ async function updateLoot(recipient: number) {
             .map(
                 ([key, val]) => `
             <h3>${key}</h3>
-            <textarea rows="4" cols="50">${val}</textarea><br>
+            <textarea rows="6" style="width: 100%">${val}</textarea><br>
             `
             )
             .join('\n');
