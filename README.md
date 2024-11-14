@@ -9,10 +9,12 @@ Change 3728214 to the clan loot admin's ID in kol
 ## To develop:
 ### Have node installed
 for example [using nvm, by following the install instructions here](https://github.com/nvm-sh/nvm), then
+
     $ nvm install 22
 
 ### Have yarn installed
 For example:
+
     $ corepack enable
     $ corepack prepare yarn@stable --activate
 
