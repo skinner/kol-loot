@@ -2,7 +2,8 @@
 todo: deploy
 ## enter into chat:
 Change 3728214 to the clan loot admin's ID in kol
-    /goto '?'':(async function(){ const mod = await import(`http://arctur.us/kol/kol-loot.js?t=${Date.now()}`); mod.updateLoot(3728214); })();z='
+    /goto '?'':(async function(){ const mod = await import(`https://arctur.us/kol/kol-loot.js?t=${Date.now()}`); mod.updateLoot(3728214);})();'
+
 ## click on "Send Message."
 
 ## To develop:
