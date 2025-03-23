@@ -15,5 +15,6 @@ export default defineConfig({
           compress: false,
           mangle: false,
         },
-    }
+    },
+    base: '/kol-loot/'
 });
