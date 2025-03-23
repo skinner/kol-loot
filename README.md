@@ -4,9 +4,9 @@ In the `/goto` commands below, change 3728214 to the clan loot admin's ID in kol
 ## Chat command:
 ### Easy way:
 
-    /goto '?'':(async function(){ const mod = await import(`https://arctur.us/kol/kol-loot.js?t=${Date.now()}`); mod.updateLoot(3728214);})();'
+    /goto '?'':(async function(){ const mod = await import(`https://skinner.github.io/kol-loot/kol-loot.js?t=${Date.now()}`); mod.updateLoot(3728214);})();'
 
-### Alternatively - if you have the .js file locally, enter this into chat and pick the .js file:
+### Alternatively - [download the .js file](https://skinner.github.io/kol-loot/kol-loot.js) locally, then enter this into chat and pick the .js file:
 
     /goto '?'':(async function(){[h]=await window.showOpenFilePicker();f=await h.getFile();t=await f.text();m=await import(`data:text/javascript;base64,${btoa(t)}`); m.updateLoot(3728214);})();'
 
